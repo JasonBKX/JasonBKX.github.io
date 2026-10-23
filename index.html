@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Jason Beh, postdoctoral associate at MBZUAI. Monte Carlo methods and Markov chains.">
+<style>*,*::before,*::after{box-sizing:border-box}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Jason Beh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: single reading column; header pairs name with a live importance-sampling plot, then publications as a typed list */
+:root{
+  --bg:#ffffff; --surface:#ffffff; --fg:#1e1b1a; --muted:#6d6460; --line:#e8ddd6;
+  --accent:#8a4a3a; --rare:#c47f68; --dot:#c4bab4; color-scheme:light;
+  --display:"Libre Baskerville", Baskerville, Georgia, serif;
+  --body:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --mono:"IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+
+
+body{background-color:var(--bg);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.05' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .33 0 0 0 0 .28 0 0 0 .30 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:220px 220px;color:var(--fg);font-family:var(--body);font-size:17px;line-height:1.6}
+.wrap{max-width:760px;margin:0 auto;padding-block:56px 72px;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));
+  display:flex;flex-direction:column;gap:56px}
+a{color:var(--accent);text-decoration-thickness:1px;text-underline-offset:3px}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
+
+header{display:grid;grid-template-columns:1fr 170px;gap:32px;align-items:end}
+header > div{min-width:0}
+h1{font-family:var(--display);font-weight:400;font-size:clamp(2.4rem,6.5vw,3.4rem);line-height:1.08;letter-spacing:-.01em;margin:0 0 14px;text-wrap:balance}
+.role{font-size:1.1rem;margin:0}
+.role span{color:var(--muted)}
+.links{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:18px;font-family:var(--mono);font-size:.82rem}
+.inspo{margin:14px 0 0;font-size:.82rem;font-style:italic;color:var(--muted)}
+figure{margin:0;display:flex;flex-direction:column;gap:6px}
+canvas{width:100%;max-width:100%;aspect-ratio:1/1;background:radial-gradient(circle at 35% 30%, #2f58ac, #17336f 78%);border:3px solid #c99a83;box-shadow:0 0 0 1px var(--line), inset 0 0 18px rgba(0,0,0,.35);border-radius:50%;display:block;
+  --dot:#b8bcc6; --rare:#e6ae96; --accent:#f5f1e8; --line:rgba(245,241,232,.22)}
+figcaption{font-family:var(--mono);font-size:.7rem;color:var(--muted);line-height:1.4}
+figcaption b{color:var(--rare);font-weight:500}
+
+h2{font-family:var(--display);font-weight:400;font-size:1.45rem;line-height:1.2;color:var(--fg);margin:0 0 18px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+section p{margin:0 0 1em;max-width:65ch}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.tags li{list-style:none;font-family:var(--mono);font-size:.78rem;padding:3px 10px;border:1px solid var(--line);border-radius:999px;color:var(--fg)}
+.tags{padding:0;margin:0}
+
+ol.pubs{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:26px}
+.pub{display:grid;grid-template-columns:64px 1fr;gap:16px}
+.pub > div{min-width:0}
+.yr{font-family:var(--mono);font-size:.82rem;color:var(--muted);padding-top:3px;font-variant-numeric:tabular-nums}
+.groups{display:flex;flex-direction:column;gap:40px}
+.grp{font-family:var(--display);font-weight:400;font-size:1.05rem;color:var(--accent);margin:0 0 16px}
+.pub h4{font-family:var(--body);font-weight:600;font-size:1.05rem;line-height:1.4;margin:0 0 4px;text-wrap:balance}
+.auth{color:var(--muted);font-size:.95rem;margin:0}
+.auth strong{color:var(--fg);font-weight:600}
+.venue{font-style:italic;font-size:.95rem;margin:0}
+.kind{display:inline-block;font-family:var(--mono);font-style:normal;font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;padding:1px 7px;border-radius:3px;margin-right:8px;vertical-align:2px}
+.k-journal{background:var(--accent);color:var(--bg)}
+.k-preprint{border:1px solid var(--accent);color:var(--accent)}
+.k-thesis{border:1px solid var(--muted);color:var(--muted)}
+
+.email{margin:8px 0 0;display:flex;flex-wrap:wrap;align-items:center;gap:10px;font-family:var(--mono);font-size:.95rem}
+#em{user-select:all;overflow-wrap:anywhere}
+#copy{font-family:var(--mono);font-size:.72rem;padding:3px 10px;border:1px solid var(--line);border-radius:3px;background:var(--surface);color:var(--fg);cursor:pointer}
+#copy:hover{border-color:var(--accent);color:var(--accent)}
+#copy:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.people{display:grid;grid-template-columns:140px 1fr;gap:12px 20px;margin:0;align-items:baseline}
+.people dt{font-family:var(--mono);font-size:.78rem;letter-spacing:.04em;color:var(--muted)}
+.people dd{margin:0;min-width:0}
+@media (max-width:620px){.people{grid-template-columns:1fr;gap:4px}.people dd{margin-bottom:12px}}
+.talks{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px}
+.talks li{display:grid;grid-template-columns:84px 1fr;gap:16px;align-items:baseline}
+.talks li > span:last-child{min-width:0}
+.talks strong{font-weight:600}
+.aff{color:var(--muted);font-size:.85em}
+@media (max-width:620px){.talks li{grid-template-columns:1fr;gap:0}}
+.collab{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:6px 28px;font-size:1.05rem}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+section{scroll-margin-top:24px}
+.toc ul{list-style:none;margin:0;padding:0;display:flex;gap:6px 18px;flex-wrap:wrap;font-family:var(--mono);font-size:.78rem}
+.toc a{color:var(--muted);text-decoration:none;padding:2px 0;border-bottom:1px solid transparent}
+.toc a:hover{color:var(--accent)}
+.toc a.on{color:var(--accent);border-bottom-color:var(--accent)}
+.toc{margin-top:-24px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+@media (min-width:1180px){
+  .toc{position:fixed;top:0;bottom:0;left:max(24px, calc(50% - 380px - 210px));width:170px;margin:0;padding:calc(60px + env(safe-area-inset-top, 0px)) 0 0;border:0;border-right:1px solid var(--line)}
+  .toc ul{flex-direction:column;gap:10px}
+  .toc a{display:inline-block;border-bottom:0;border-left:2px solid transparent;padding:0 0 0 10px}
+  .toc a.on{border-left-color:var(--accent)}
+}
+footer{font-family:var(--mono);font-size:.75rem;color:var(--muted);border-top:1px solid var(--line);padding-top:16px}
+
+@media (max-width:620px){
+  header{grid-template-columns:1fr}
+  figure{max-width:170px}
+  .pub{grid-template-columns:1fr;gap:2px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Jason Beh</h1>
+      <p class="role">Postdoctoral Associate <span>· MBZUAI, Abu Dhabi</span></p>
+      <p class="email"><span id="em">Jason.KaiXun@mbzuai.ac.ae</span> <button id="copy" type="button">Copy</button></p>
+      <div class="links">
+        <a href="https://scholar.google.com/citations?user=oErd7s0AAAAJ&hl=en" target="_blank" rel="noopener">Google Scholar</a>
+        <a href="https://orcid.org/0009-0005-8511-5652" target="_blank" rel="noopener">ORCID</a>
+        <a href="https://github.com/JasonBKX" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://mbzuai.ac.ae" target="_blank" rel="noopener">MBZUAI</a>
+      </div>
+      <p class="inspo">Colours inspired by the <a href="https://www.rolex.com/watches/padellone/features" target="_blank" rel="noopener">Rolex Perpetual Padellone in Everose gold</a>.</p>
+    </div>
+    <figure>
+      <canvas id="is" width="440" height="440" aria-label="Animated plot: samples from a nominal density move toward a rare-event region as an adaptive importance sampler learns its proposal"></canvas>
+      <figcaption>Adaptive IS: proposal drifts toward the rare set <b>{φ(X) &gt; γ}</b></figcaption>
+    </figure>
+  </header>
+
+  <nav class="toc" aria-label="Sections"><ul><li><a href="#research">Research</a></li><li><a href="#people">People</a></li><li><a href="#publications">Publications</a></li><li><a href="#education">Education and experience</a></li><li><a href="#teaching">Teaching</a></li><li><a href="#talks">Talks and posters</a></li><li><a href="#funding">Funding and support</a></li><li><a href="#languages">Languages</a></li></ul></nav>
+
+  <section id="research">
+    <h2>Research</h2>
+    <p>I am interested in Monte Carlo methods and Markov chains in general.</p>
+    <ul class="tags">
+      <li>Entropic optimal transport</li><li>Importance sampling</li><li>Rare events</li><li>Langevin dynamics</li><li>High-dimensional probability</li>
+    </ul>
+  </section>
+
+  <section id="people">
+    <h2>People</h2>
+    <dl class="people">
+      <dt>Collaborators</dt>
+      <dd><ul class="collab"><li><a href="https://sites.google.com/site/ajayjasra0/home" target="_blank" rel="noopener">Ajay Jasra</a> <span class="aff">(MBZUAI)</span></li><li><a href="https://people.bordeaux.inria.fr/pierre.delmoral/research.html" target="_blank" rel="noopener">Pierre Del Moral</a> <span class="aff">(Inria)</span></li><li><a href="https://www.wim.uni-mannheim.de/doering/team/prof-dr-simon-weissmann/" target="_blank" rel="noopener">Simon Weissmann</a> <span class="aff">(University of Mannheim)</span></li></ul></dd>
+      <dt>PhD advisors</dt>
+      <dd><ul class="collab"><li><a href="https://scholar.google.com/citations?hl=en&amp;user=uyKyQ9oAAAAJ&amp;view_op=list_works&amp;sortby=pubdate" target="_blank" rel="noopener">Florian Simatos</a> <span class="aff">(ISAE-SUPAERO)</span></li><li><a href="https://www.onera.fr/en/staff/jerome-morio" target="_blank" rel="noopener">Jérôme Morio</a> <span class="aff">(ONERA)</span></li></ul></dd>
+    </dl>
+  </section>
+
+  <section id="publications">
+    <h2>Publications</h2>
+    <div class="groups">
+    <div class="group">
+    <h3 class="grp">Preprints</h3>
+    <ol class="pubs">
+      <li class="pub"><span class="yr">2026</span><div>
+        <h4>Sequential entropic optimal transport for Bayesian inverse problems via multilevel Monte Carlo</h4>
+        <p class="auth"><strong>J. Beh</strong>, P. Del Moral, A. Jasra</p>
+        <p class="venue"><a href="https://arxiv.org/abs/2610.29546" target="_blank" rel="noopener">arXiv:2610.29546</a></p>
+      </div></li>
+      <li class="pub"><span class="yr">2025</span><div>
+        <h4>Phase transition for conditional covariance matrices estimated by importance sampling, and implications for cross-entropy schemes in high dimension</h4>
+        <p class="auth"><strong>J. Beh</strong>, J. Morio, F. Simatos</p>
+        <p class="venue">Submitted · <a href="https://arxiv.org/abs/2511.11351" target="_blank" rel="noopener">arXiv:2511.11351</a></p>
+      </div></li>
+      <li class="pub"><span class="yr">2025</span><div>
+        <h4>Affine invariant interacting Langevin dynamics in Markov chain importance sampling for rare event estimation</h4>
+        <p class="auth"><strong>J. Beh</strong>, J. Morio, F. Simatos, S. Weissmann</p>
+        <p class="venue">Submitted · <a href="https://arxiv.org/abs/2506.20185" target="_blank" rel="noopener">arXiv:2506.20185</a></p>
+      </div></li>
+    </ol>
+    </div>
+    <div class="group">
+    <h3 class="grp">Journal articles</h3>
+    <ol class="pubs">
+      <li class="pub"><span class="yr">2025</span><div>
+        <h4>Insight from the Kullback–Leibler divergence into adaptive importance sampling schemes for rare event analysis in high dimension</h4>
+        <p class="auth"><strong>J. Beh</strong>, Y. Shadmi, F. Simatos</p>
+        <p class="venue">The Annals of Applied Probability 35(2), 1083–1124 · <a href="https://arxiv.org/abs/2309.16828" target="_blank" rel="noopener">arXiv:2309.16828</a></p>
+      </div></li>
+    </ol>
+    </div>
+    <div class="group">
+    <h3 class="grp">Thesis</h3>
+    <ol class="pubs">
+      <li class="pub"><span class="yr">2025</span><div>
+        <h4>Adaptive importance sampling in high dimension for rare event probability estimation: theoretical analysis and numerical developments</h4>
+        <p class="auth"><strong>J. Beh</strong></p>
+        <p class="venue">PhD thesis, <a href="https://utheme.utoulouse.fr/s/fr/item/45143" target="_blank" rel="noopener">Université de Toulouse</a></p>
+      </div></li>
+    </ol>
+    </div>
+    </div>
+  </section>
+
+  <section id="education">
+    <h2>Education and experience</h2>
+    <ol class="talks">
+      <li><span class="yr">2026–</span><span><strong>Postdoctoral Associate</strong>, MBZUAI, Abu Dhabi</span></li>
+      <li><span class="yr">2023–25</span><span><strong>PhD in Mathematics and Applications</strong>, ONERA, ISAE-SUPAERO, Université de Toulouse. Defended 3 December 2025.</span></li>
+      <li><span class="yr">2024</span><span>Research visit, University of Mannheim, hosted by Simon Weissmann</span></li>
+      <li><span class="yr">2019–22</span><span><strong>MSc in General Engineering</strong> (Diplôme d’ingénieur), ISAE-SUPAERO, Toulouse</span></li>
+      <li><span class="yr">2017–19</span><span>Integrated preparatory class, INP Grenoble</span></li>
+    </ol>
+  </section>
+
+  <section id="teaching">
+    <h2>Teaching</h2>
+    <ol class="talks">
+      <li><span class="yr">Ongoing</span><span><strong>Teaching assistant</strong>, Advanced Probability Theory &amp; Stochastic Processes, MBZUAI</span></li>
+      <li><span class="yr">2023–25</span><span><strong>Teaching assistant</strong>, Petites Classes de Probabilités, ISAE-SUPAERO <span class="aff">(24 h total)</span></span></li>
+    </ol>
+  </section>
+
+  <section id="talks">
+    <h2>Talks and posters</h2>
+    <ol class="talks">
+      <li><span class="yr">Sep 2025</span><span>Talk, <strong>ENUMATH 2025</strong>, Heidelberg, Germany</span></li>
+      <li><span class="yr">Apr 2025</span><span>Talk, <strong>RT-UQ PhD day / SAMO 2025</strong>, Grenoble, France</span></li>
+      <li><span class="yr">Mar 2025</span><span>Poster, Rare Events and Model Reduction Day (IASIS, RT-UQ), Paris, France</span></li>
+      <li><span class="yr">Nov 2024</span><span>Seminar talk, University of Mannheim, Germany</span></li>
+      <li><span class="yr">Sep 2024</span><span>Talk, ETICS 2024 research school, Saissac, France</span></li>
+      <li><span class="yr">Apr 2024</span><span>Poster, MASCOT-NUM 2024, Hyères, France</span></li>
+      <li><span class="yr">Feb 2024</span><span>Talk, <strong>SIAM UQ24</strong>, Trieste, Italy</span></li>
+      <li><span class="yr">Apr 2023</span><span>Poster, MASCOT-NUM 2023, Le Croisic, France</span></li>
+    </ol>
+  </section>
+
+  <section id="funding">
+    <h2>Funding and support</h2>
+    <ol class="talks">
+      <li><span class="yr">2025</span><span><strong>Travel support</strong> for ENUMATH 2025, Heidelberg University</span></li>
+      <li><span class="yr">2024</span><span><strong>Mobility funding</strong> for the research visit to the University of Mannheim, jointly from ONERA, the EDMITT doctoral school and EUR-MINT</span></li>
+      <li><span class="yr">2024</span><span><strong>Registration support</strong> for the ETICS 2024 summer school, French research network on Uncertainty Quantification</span></li>
+      <li><span class="yr">2023–25</span><span><strong>PhD co-funding</strong>, University Research School EUR-MINT, Toulouse <span class="aff">(ANR-18-EURE-0023)</span></span></li>
+      <li><span class="yr">2016–22</span><span><strong>Six-year scholarship</strong>, Public Service Department of Malaysia (JPA), France–Malaysia bilateral cooperation programme</span></li>
+    </ol>
+  </section>
+
+  <section id="languages">
+    <h2>Languages</h2>
+    <dl class="people">
+      <dt>Fluent</dt>
+      <dd><ul class="collab"><li>Mandarin</li><li>French</li><li>English</li><li>Malay</li></ul></dd>
+      <dt>Beginner</dt>
+      <dd><ul class="collab"><li>Japanese</li></ul></dd>
+    </dl>
+  </section>
+
+  <footer>Updated October 2026</footer>
+</div>
+
+<script>
+document.getElementById('copy').addEventListener('click',function(){
+  const b=this, t=document.getElementById('em').textContent;
+  const done=()=>{b.textContent='Copied';setTimeout(()=>b.textContent='Copy',1600)};
+  const sel=()=>{const r=document.createRange();r.selectNodeContents(document.getElementById('em'));const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent='Selected';setTimeout(()=>b.textContent='Copy',1600)};
+  try{navigator.clipboard.writeText(t).then(done,sel)}catch(e){sel()}
+});
+(function(){
+  const c=document.getElementById('is'), ctx=c.getContext('2d');
+  const W=c.width,H=c.height, N=140;
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function css(v){return getComputedStyle(c).getPropertyValue(v).trim()}
+  function gauss(){let u=0,v=0;while(!u)u=Math.random();while(!v)v=Math.random();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v)}
+  const base=Array.from({length:N},()=>[gauss(),gauss()]);
+  const gamma=2.4; // rare set: x+y > gamma*sqrt2
+  const sx=W/8, cx=W*0.4, cy=H*0.6;
+  function draw(t){
+    const s=(1-Math.cos(t))/2; // 0..1..0
+    const mu=s*2.0, sig=1-0.35*s;
+    ctx.clearRect(0,0,W,H);
+    // rare region
+    ctx.fillStyle=css('--rare'); ctx.globalAlpha=.12;
+    ctx.beginPath();
+    const k=gamma*Math.SQRT2;
+    // boundary x+y=k in data coords -> canvas
+    const p=(x,y)=>[cx+x*sx, cy-y*sx];
+    let a=p(k+6,-6), b=p(-6,k+6);
+    ctx.moveTo(...a); ctx.lineTo(...b); ctx.lineTo(W,0); ctx.lineTo(W,H); ctx.closePath(); ctx.fill();
+    ctx.globalAlpha=1; ctx.strokeStyle=css('--rare'); ctx.lineWidth=1.5; ctx.setLineDash([5,4]);
+    ctx.beginPath(); ctx.moveTo(...a); ctx.lineTo(...b); ctx.stroke(); ctx.setLineDash([]);
+    // nominal density contour
+    ctx.strokeStyle=css('--line'); ctx.lineWidth=1;
+    [1,2].forEach(r=>{ctx.beginPath();ctx.arc(cx,cy,r*sx,0,Math.PI*2);ctx.stroke()});
+    // samples
+    for(const [x,y] of base){
+      const X=mu+sig*x, Y=mu+sig*y, hit=X+Y>k;
+      const [px,py]=p(X,Y);
+      ctx.fillStyle=hit?css('--rare'):css('--dot');
+      ctx.beginPath(); ctx.arc(px,py,hit?3.2:2.4,0,Math.PI*2); ctx.fill();
+    }
+    // proposal mean
+    const [mx,my]=p(mu,mu);
+    ctx.strokeStyle=css('--accent'); ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(mx-6,my); ctx.lineTo(mx+6,my); ctx.moveTo(mx,my-6); ctx.lineTo(mx,my+6); ctx.stroke();
+  }
+  if(reduce){ draw(Math.PI*0.75); return; }
+  draw(Math.PI*0.75);
+  let t0=null;
+  function loop(ts){ if(t0===null)t0=ts; draw(Math.PI*0.75+(ts-t0)/2200); requestAnimationFrame(loop); }
+  requestAnimationFrame(loop);
+})();
+</script>
+<script>
+(function(){
+  const links=[...document.querySelectorAll('.toc a')];
+  const map=new Map(links.map(a=>[a.getAttribute('href').slice(1),a]));
+  if(!('IntersectionObserver' in window))return;
+  const vis=new Set();
+  const io=new IntersectionObserver(es=>{
+    es.forEach(e=>e.isIntersecting?vis.add(e.target.id):vis.delete(e.target.id));
+    const first=[...map.keys()].find(k=>vis.has(k));
+    links.forEach(a=>a.classList.toggle('on',a===map.get(first)));
+  },{rootMargin:'-10% 0px -60% 0px'});
+  map.forEach((a,id)=>{const el=document.getElementById(id);if(el)io.observe(el)});
+})();
+</script>
+
+</body>
+</html>
