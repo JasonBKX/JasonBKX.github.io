@@ -42,6 +42,13 @@ figcaption b{color:var(--rare);font-weight:500}
 
 h2{font-family:var(--display);font-weight:400;font-size:1.45rem;line-height:1.2;color:var(--fg);margin:0 0 18px;padding-bottom:10px;border-bottom:1px solid var(--line)}
 section p{margin:0 0 1em;max-width:65ch}
+.cofilter{display:flex;flex-wrap:wrap;gap:8px;margin:-4px 0 26px}
+.cofilter button{font-family:var(--mono);font-size:.78rem;padding:3px 10px;border:1px solid var(--line);border-radius:999px;background:transparent;color:var(--fg);cursor:pointer;line-height:1.5}
+.cofilter button:hover{border-color:var(--accent);color:var(--accent)}
+.cofilter button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+.cofilter button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.cofilter .n{opacity:.6;margin-left:4px;font-variant-numeric:tabular-nums}
+.cofilter-empty{font-size:.9rem;color:var(--muted);margin:0 0 20px}
 .tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
 .tags li{list-style:none;font-family:var(--mono);font-size:.78rem;padding:3px 10px;border:1px solid var(--line);border-radius:999px;color:var(--fg)}
 .tags{padding:0;margin:0}
@@ -120,7 +127,7 @@ footer{font-family:var(--mono);font-size:.75rem;color:var(--muted);border-top:1p
     </figure>
   </header>
 
-  <nav class="toc" aria-label="Sections"><ul><li><a href="#research">Research</a></li><li><a href="#people">People</a></li><li><a href="#publications">Publications</a></li><li><a href="#education">Education and experience</a></li><li><a href="#teaching">Teaching</a></li><li><a href="#talks">Talks and posters</a></li><li><a href="#funding">Funding and support</a></li><li><a href="#languages">Languages</a></li></ul></nav>
+  <nav class="toc" aria-label="Sections"><ul><li><a href="#research">Research</a></li><li><a href="#people">People</a></li><li><a href="#publications">Publications</a></li><li><a href="#education">Experience and education</a></li><li><a href="#teaching">Teaching</a></li><li><a href="#talks">Talks and posters</a></li><li><a href="#funding">Funding and support</a></li><li><a href="#languages">Languages</a></li></ul></nav>
 
   <section id="research">
     <h2>Research</h2>
@@ -142,6 +149,8 @@ footer{font-family:var(--mono);font-size:.75rem;color:var(--muted);border-top:1p
 
   <section id="publications">
     <h2>Publications</h2>
+    <div class="cofilter" id="cofilter" role="group" aria-label="Filter publications by co-author"></div>
+    <p class="cofilter-empty" id="cofilter-note" hidden></p>
     <div class="groups">
     <div class="group">
     <h3 class="grp">Preprints</h3>
@@ -192,16 +201,26 @@ footer{font-family:var(--mono);font-size:.75rem;color:var(--muted);border-top:1p
   </section>
 
   <section id="education">
-    <h2>Education and experience</h2>
+    <h2>Experience and education</h2>
+    <div class="groups">
+    <div class="group">
+    <h3 class="grp">Experience</h3>
     <ol class="talks">
       <li><span class="yr">2026–</span><span><strong>Postdoctoral Associate</strong>, MBZUAI, Abu Dhabi</span></li>
-      <li><span class="yr">2023–25</span><span><strong>PhD in Mathematics and Applications</strong>, ONERA, ISAE-SUPAERO, Université de Toulouse. Defended 3 December 2025.</span></li>
       <li><span class="yr">2024</span><span><strong>Research visit</strong>, University of Mannheim, hosted by Simon Weissmann</span></li>
-      <li><span class="yr">2019–22</span><span><strong>MSc in General Engineering</strong> (Diplôme d’ingénieur), ISAE-SUPAERO, Toulouse</span></li>
       <li><span class="yr">2021</span><span><strong>Research project</strong>, ISAE-SUPAERO, Toulouse: emergence of the giant component in the Jain–Krishna random graph model</span></li>
       <li><span class="yr">2019</span><span><strong>Research internship</strong>, LEPMI laboratory, Grenoble: self-discharge of Li-ion cells during long-term storage</span></li>
+    </ol>
+    </div>
+    <div class="group">
+    <h3 class="grp">Education</h3>
+    <ol class="talks">
+      <li><span class="yr">2023–25</span><span><strong>PhD in Mathematics and Applications</strong>, ONERA, ISAE-SUPAERO, Université de Toulouse. Defended 3 December 2025.</span></li>
+      <li><span class="yr">2019–22</span><span><strong>MSc in General Engineering</strong> (Diplôme d’ingénieur), ISAE-SUPAERO, Toulouse</span></li>
       <li><span class="yr">2017–19</span><span><strong>Integrated preparatory class</strong>, INP Grenoble</span></li>
     </ol>
+    </div>
+    </div>
   </section>
 
   <section id="teaching">
@@ -214,16 +233,26 @@ footer{font-family:var(--mono);font-size:.75rem;color:var(--muted);border-top:1p
 
   <section id="talks">
     <h2>Talks and posters</h2>
+    <div class="groups">
+    <div class="group">
+    <h3 class="grp">Talks</h3>
     <ol class="talks">
-      <li><span class="yr">Sep 2025</span><span>Talk, <strong>ENUMATH 2025</strong>, Heidelberg, Germany</span></li>
-      <li><span class="yr">Apr 2025</span><span>Talk, <strong>RT-UQ PhD day / SAMO 2025</strong>, Grenoble, France</span></li>
-      <li><span class="yr">Mar 2025</span><span>Poster, Rare Events and Model Reduction Day (IASIS, RT-UQ), Paris, France</span></li>
-      <li><span class="yr">Nov 2024</span><span>Seminar talk, University of Mannheim, Germany</span></li>
-      <li><span class="yr">Sep 2024</span><span>Talk, ETICS 2024 research school, Saissac, France</span></li>
-      <li><span class="yr">Apr 2024</span><span>Poster, MASCOT-NUM 2024, Hyères, France</span></li>
-      <li><span class="yr">Feb 2024</span><span>Talk, <strong>SIAM UQ24</strong>, Trieste, Italy</span></li>
-      <li><span class="yr">Apr 2023</span><span>Poster, MASCOT-NUM 2023, Le Croisic, France</span></li>
+      <li><span class="yr">Sep 2025</span><span><strong>ENUMATH 2025</strong>, Heidelberg, Germany</span></li>
+      <li><span class="yr">Apr 2025</span><span><strong>RT-UQ PhD day / SAMO 2025</strong>, Grenoble, France</span></li>
+      <li><span class="yr">Nov 2024</span><span><strong>Seminar, University of Mannheim</strong>, Germany</span></li>
+      <li><span class="yr">Sep 2024</span><span><strong>ETICS 2024 research school</strong>, Saissac, France</span></li>
+      <li><span class="yr">Feb 2024</span><span><strong>SIAM UQ24</strong>, Trieste, Italy</span></li>
     </ol>
+    </div>
+    <div class="group">
+    <h3 class="grp">Posters</h3>
+    <ol class="talks">
+      <li><span class="yr">Mar 2025</span><span><strong>Rare Events and Model Reduction Day</strong> (IASIS, RT-UQ), Paris, France</span></li>
+      <li><span class="yr">Apr 2024</span><span><strong>MASCOT-NUM 2024</strong>, Hyères, France</span></li>
+      <li><span class="yr">Apr 2023</span><span><strong>MASCOT-NUM 2023</strong>, Le Croisic, France</span></li>
+    </ol>
+    </div>
+    </div>
   </section>
 
   <section id="funding">
@@ -314,6 +343,39 @@ document.getElementById('copy').addEventListener('click',function(){
     links.forEach(a=>a.classList.toggle('on',a===map.get(first)));
   },{rootMargin:'-10% 0px -60% 0px'});
   map.forEach((a,id)=>{const el=document.getElementById(id);if(el)io.observe(el)});
+})();
+</script>
+<script>
+(function(){
+  const box=document.getElementById('cofilter'); if(!box) return;
+  const pubs=[...document.querySelectorAll('#publications .pub')];
+  const counts=new Map();
+  pubs.forEach(li=>{
+    const a=li.querySelector('.auth'); if(!a) return;
+    const names=a.textContent.split(',').map(x=>x.trim()).filter(x=>x && x!=='J. Beh');
+    li.dataset.co=JSON.stringify(names);
+    names.forEach(n=>counts.set(n,(counts.get(n)||0)+1));
+  });
+  const surname=n=>n.replace(/^([A-Z]\.\s*)+/,'');
+  const skip=new Set(['Y. Shadmi','E. Flayac']);
+  const list=[...counts.entries()].filter(([n])=>!skip.has(n)).sort((a,b)=>b[1]-a[1]||surname(a[0]).localeCompare(surname(b[0])));
+  let active=null;
+  function mk(label,key,n){
+    const b=document.createElement('button'); b.type='button'; b.dataset.key=key;
+    b.textContent=label;
+    if(n){const c=document.createElement('span');c.className='n';c.textContent=n;b.appendChild(c)}
+    b.addEventListener('click',()=>apply(active===key||key===''?null:key));
+    box.appendChild(b); return b;
+  }
+  mk('All','',0);
+  list.forEach(([name,n])=>mk(name,name,n));
+  function apply(key){
+    active=key;
+    box.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String((b.dataset.key||null)===(key||null)||(!key&&b.dataset.key===''))));
+    pubs.forEach(li=>{const co=JSON.parse(li.dataset.co||'[]');li.hidden=!!key&&!co.includes(key)});
+    document.querySelectorAll('#publications .group').forEach(g=>{g.hidden=!g.querySelector('.pub:not([hidden])')});
+  }
+  apply(null);
 })();
 </script>
 
