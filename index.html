@@ -56,6 +56,13 @@ section p{margin:0 0 1em;max-width:65ch}
 ol.pubs{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:26px}
 .pub{display:grid;grid-template-columns:64px 1fr;gap:16px}
 .pub > div{min-width:0}
+.pub .yr{position:relative}
+.pub.run-cont .yr{color:transparent;user-select:none}
+.pub.run-start .yr::after,.pub.run-cont .yr::after{content:"";position:absolute;left:1.15em;bottom:-26px;border-left:1.5px solid var(--dot)}
+.pub.run-start .yr::after{top:2em}
+.pub.run-cont .yr::after{top:0}
+.pub.run-end .yr::after{bottom:.4em}
+@media (max-width:620px){.pub.run-cont .yr{color:var(--muted)}.pub .yr::after{display:none}}
 .yr{font-family:var(--mono);font-size:.82rem;color:var(--muted);padding-top:3px;font-variant-numeric:tabular-nums}
 .groups{display:flex;flex-direction:column;gap:40px}
 .grp{font-family:var(--display);font-weight:400;font-size:1.05rem;color:var(--accent);margin:0 0 16px}
@@ -351,6 +358,23 @@ document.getElementById('copy').addEventListener('click',function(){
 })();
 </script>
 <script>
+window.yrRuns=function(){
+  document.querySelectorAll('#publications ol.pubs').forEach(ol=>{
+    const items=[...ol.children].filter(li=>li.classList.contains('pub')&&!li.hidden);
+    ol.querySelectorAll('.pub').forEach(li=>li.classList.remove('run-start','run-cont','run-end'));
+    items.forEach((li,i)=>{
+      const y=li.querySelector('.yr').textContent.trim();
+      const prev=i>0&&items[i-1].querySelector('.yr').textContent.trim()===y;
+      const next=i<items.length-1&&items[i+1].querySelector('.yr').textContent.trim()===y;
+      if(!prev)li.classList.add('run-start');
+      if(prev)li.classList.add('run-cont');
+      if(!next)li.classList.add('run-end');
+    });
+  });
+};
+window.yrRuns();
+</script>
+<script>
 (function(){
   const box=document.getElementById('cofilter'); if(!box) return;
   const pubs=[...document.querySelectorAll('#publications .pub')];
@@ -379,6 +403,7 @@ document.getElementById('copy').addEventListener('click',function(){
     box.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String((b.dataset.key||null)===(key||null)||(!key&&b.dataset.key===''))));
     pubs.forEach(li=>{const co=JSON.parse(li.dataset.co||'[]');li.hidden=!!key&&!co.includes(key)});
     document.querySelectorAll('#publications .group').forEach(g=>{g.hidden=!g.querySelector('.pub:not([hidden])')});
+    window.yrRuns&&window.yrRuns();
   }
   apply(null);
 })();
