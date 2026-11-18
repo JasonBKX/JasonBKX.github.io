@@ -68,6 +68,13 @@ ol.pubs{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;ga
 .groups{display:flex;flex-direction:column;gap:40px}
 .cnt{font-family:var(--mono);font-size:.62em;font-weight:400;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:1px 8px;margin-left:8px;vertical-align:.22em;font-variant-numeric:tabular-nums}
 .cnt:empty{display:none}
+.sec-toggle{appearance:none;background:none;border:0;padding:0;margin:0;font:inherit;color:inherit;width:100%;display:flex;align-items:baseline;gap:0;text-align:left;cursor:pointer}
+.sec-toggle:focus-visible{outline:2px solid var(--accent);outline-offset:4px;border-radius:2px}
+.sec-toggle .chev{margin-left:auto;padding-left:12px;font-family:var(--mono);font-size:.7em;color:var(--muted);transition:transform .2s ease}
+.sec-toggle:hover .chev{color:var(--accent)}
+section.collapsed > h2{margin-bottom:0}
+.sec-toggle[aria-expanded="false"] .chev{transform:rotate(-90deg)}
+@media (prefers-reduced-motion: reduce){.sec-toggle .chev{transition:none}}
 .grp{font-family:var(--display);font-weight:400;font-size:1.05rem;color:var(--accent);margin:0 0 16px}
 .pub h4{font-family:var(--body);font-weight:600;color:var(--fg);font-size:1.05rem;line-height:1.4;margin:0 0 4px;text-wrap:balance}
 .auth{font-family:"IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;color:var(--muted);font-size:.9rem;margin:2px 0 0}
@@ -93,6 +100,7 @@ ol.pubs{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;ga
 .talks strong{font-weight:600;color:var(--gold)}
 .aff{color:var(--muted);font-size:.85em}
 @media (max-width:620px){.talks li{grid-template-columns:1fr;gap:0}}
+.people-in{margin-top:26px}
 .collab{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:6px 28px;font-size:1.05rem}
 html{scroll-behavior:smooth}
 @media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
@@ -137,19 +145,14 @@ footer{font-family:var(--mono);font-size:.75rem;color:var(--muted);border-top:1p
     </figure>
   </header>
 
-  <nav class="toc" aria-label="Sections"><ul><li><a href="#research">Research</a></li><li><a href="#people">People</a></li><li><a href="#publications">Publications</a></li><li><a href="#education">Experience and education</a></li><li><a href="#teaching">Teaching</a></li><li><a href="#talks">Talks and posters</a></li><li><a href="#funding">Funding and support</a></li><li><a href="#languages">Languages</a></li></ul></nav>
+  <nav class="toc" aria-label="Sections"><ul><li><a href="#research">Research and collaborators</a></li><li><a href="#publications">Publications</a></li><li><a href="#education">Experience and education</a></li><li><a href="#teaching">Teaching</a></li><li><a href="#talks">Talks and posters</a></li><li><a href="#funding">Funding and support</a></li><li><a href="#languages">Languages</a></li></ul></nav>
 
   <section id="research">
-    <h2>Research</h2>
-    <p>I am interested in Monte Carlo methods and Markov chains in general.</p>
+    <h2>Research and collaborators</h2>
     <ul class="tags">
-      <li>Entropic optimal transport</li><li>Importance sampling</li><li>Rare events</li><li>Langevin dynamics</li><li>High-dimensional probability</li>
+      <li>Entropic optimal transport</li><li>Importance sampling</li><li>Rare events</li><li>Interacting particle samplers</li><li>Particle filters</li><li>High-dimensional probability</li>
     </ul>
-  </section>
-
-  <section id="people">
-    <h2>People</h2>
-    <dl class="people">
+    <dl class="people people-in">
       <dt>Collaborators</dt>
       <dd><ul class="collab"><li><a href="https://sites.google.com/site/ajayjasra0/home" target="_blank" rel="noopener">Ajay Jasra</a> <span class="aff">(MBZUAI)</span></li><li><a href="https://people.bordeaux.inria.fr/pierre.delmoral/research.html" target="_blank" rel="noopener">Pierre Del Moral</a> <span class="aff">(Inria)</span></li><li><a href="https://www.wim.uni-mannheim.de/doering/team/prof-dr-simon-weissmann/" target="_blank" rel="noopener">Simon Weissmann</a> <span class="aff">(University of Mannheim)</span></li></ul></dd>
       <dt>PhD advisors</dt>
@@ -427,6 +430,28 @@ window.yrRuns();
     window.pubCounts&&window.pubCounts();
   }
   apply(null);
+})();
+</script>
+<script>
+(function(){
+  const secs=[...document.querySelectorAll('section[id]')];
+  const map={};
+  secs.forEach(sec=>{
+    const h=sec.querySelector(':scope > h2'); if(!h) return;
+    const body=document.createElement('div'); body.className='sec-body'; body.id=sec.id+'-body';
+    while(h.nextSibling) body.appendChild(h.nextSibling);
+    sec.appendChild(body);
+    const b=document.createElement('button'); b.type='button'; b.className='sec-toggle';
+    b.setAttribute('aria-expanded','true'); b.setAttribute('aria-controls',body.id);
+    while(h.firstChild) b.appendChild(h.firstChild);
+    const c=document.createElement('span'); c.className='chev'; c.setAttribute('aria-hidden','true'); c.textContent='\u25BE';
+    b.appendChild(c); h.appendChild(b);
+    const set=open=>{b.setAttribute('aria-expanded',String(open)); body.hidden=!open; sec.classList.toggle('collapsed',!open); b.title=open?'Collapse section':'Expand section';};
+    set(true);
+    b.addEventListener('click',()=>set(body.hidden));
+    map[sec.id]=set;
+  });
+  document.querySelectorAll('.toc a[href^="#"]').forEach(a=>a.addEventListener('click',()=>{const f=map[a.getAttribute('href').slice(1)]; if(f) f(true);}));
 })();
 </script>
 
