@@ -65,6 +65,8 @@ ol.pubs{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;ga
 @media (max-width:620px){.pub.run-cont .yr{color:var(--muted)}.pub .yr::after{display:none}}
 .yr{font-family:var(--mono);font-size:.82rem;color:var(--muted);padding-top:3px;font-variant-numeric:tabular-nums}
 .groups{display:flex;flex-direction:column;gap:40px}
+.cnt{font-family:var(--mono);font-size:.62em;font-weight:400;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:1px 8px;margin-left:8px;vertical-align:.22em;font-variant-numeric:tabular-nums}
+.cnt:empty{display:none}
 .grp{font-family:var(--display);font-weight:400;font-size:1.05rem;color:var(--accent);margin:0 0 16px}
 .pub h4{font-family:var(--body);font-weight:600;color:var(--fg);font-size:1.05rem;line-height:1.4;margin:0 0 4px;text-wrap:balance}
 .auth{font-family:"IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;color:var(--muted);font-size:.9rem;margin:2px 0 0}
@@ -155,13 +157,18 @@ footer{font-family:var(--mono);font-size:.75rem;color:var(--muted);border-top:1p
   </section>
 
   <section id="publications">
-    <h2>Publications</h2>
+    <h2>Publications <span class="cnt" data-count="total"></span></h2>
     <div class="cofilter" id="cofilter" role="group" aria-label="Filter publications by co-author"></div>
     <p class="cofilter-empty" id="cofilter-note" hidden></p>
     <div class="groups">
     <div class="group">
-    <h3 class="grp">Preprints</h3>
+    <h3 class="grp">Preprints <span class="cnt" data-count="group"></span></h3>
     <ol class="pubs">
+      <li class="pub"><span class="yr">2026</span><div>
+        <h4>Multilevel filtering on manifolds with light Schrödinger bridges</h4>
+        <p class="auth"><strong>J. Beh</strong>, P. Del Moral, A. Jasra</p>
+        <p class="venue"><a href="https://arxiv.org/abs/2611.22443" target="_blank" rel="noopener">arXiv:2611.22443</a></p>
+      </div></li>
       <li class="pub"><span class="yr">2026</span><div>
         <h4>Optimal importance sampling densities for estimating several expectations at once</h4>
         <p class="auth"><strong>J. Beh</strong>, J. Morio</p>
@@ -190,7 +197,7 @@ footer{font-family:var(--mono);font-size:.75rem;color:var(--muted);border-top:1p
     </ol>
     </div>
     <div class="group">
-    <h3 class="grp">Journal articles</h3>
+    <h3 class="grp">Journal articles <span class="cnt" data-count="group"></span></h3>
     <ol class="pubs">
       <li class="pub"><span class="yr">2025</span><div>
         <h4>Insight from the Kullback–Leibler divergence into adaptive importance sampling schemes for rare event analysis in high dimension</h4>
@@ -358,6 +365,16 @@ document.getElementById('copy').addEventListener('click',function(){
 })();
 </script>
 <script>
+window.pubCounts=function(){
+  const sec=document.getElementById('publications'); if(!sec) return;
+  let total=0;
+  sec.querySelectorAll('.cnt[data-count="group"]').forEach(c=>{
+    const n=c.closest('.group').querySelectorAll('.pub:not([hidden])').length;
+    c.textContent=n; total+=n;
+  });
+  const t=sec.querySelector('.cnt[data-count="total"]'); if(t) t.textContent=total;
+};
+window.pubCounts();
 window.yrRuns=function(){
   document.querySelectorAll('#publications ol.pubs').forEach(ol=>{
     const items=[...ol.children].filter(li=>li.classList.contains('pub')&&!li.hidden);
@@ -404,6 +421,7 @@ window.yrRuns();
     pubs.forEach(li=>{const co=JSON.parse(li.dataset.co||'[]');li.hidden=!!key&&!co.includes(key)});
     document.querySelectorAll('#publications .group').forEach(g=>{g.hidden=!g.querySelector('.pub:not([hidden])')});
     window.yrRuns&&window.yrRuns();
+    window.pubCounts&&window.pubCounts();
   }
   apply(null);
 })();
